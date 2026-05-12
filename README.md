@@ -45,14 +45,7 @@ Cada pergunta tem o formato:
 }
 ```
 
-## 📋 Melhorias Aplicadas (conforme PDF da UNIFEBE/Prefeitura de Brusque)
 
-1. ✅ Campos opcionais na tela inicial
-2. ✅ Perguntas apresentadas de forma aleatória
-3. ✅ Áudio nas perguntas (leitura por voz)
-4. ✅ Tudo em CAIXA ALTA
-5. ✅ Temas: Zoobotânico, Capivara, Ponte Estaiada, Rio Itajaí-Mirim, Parque das Esculturas
-6. ✅ Sistema de feedback (Parabéns / Quase Lá!)
 
 ## 👥 Projeto
 
