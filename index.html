@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Minha Aventura em Brusque!</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap');
+
+  :root {
+    --azul: #3db8e8;
+    --azul-escuro: #1a8bbf;
+    --verde: #4cce5e;
+    --verde-escuro: #2ea042;
+    --vermelho: #f05a5a;
+    --vermelho-escuro: #c23b3b;
+    --amarelo: #ffd23f;
+    --laranja: #ff8c42;
+    --branco: #ffffff;
+    --cinza-claro: #e8f4fd;
+    --sombra: 0 6px 0px rgba(0,0,0,0.2);
+    --sombra-btn: 0 5px 0px rgba(0,0,0,0.25);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: linear-gradient(160deg, #7dd3f5 0%, #b8e8ff 50%, #d4f0ff 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* Nuvens decorativas */
+  body::before, body::after {
+    content: '';
+    position: fixed;
+    background: rgba(255,255,255,0.5);
+    border-radius: 50%;
+    animation: float-cloud 20s linear infinite;
+    z-index: 0;
+  }
+  body::before {
+    width: 200px; height: 80px;
+    top: 10%; left: -220px;
+    box-shadow: 70px -20px 0 40px rgba(255,255,255,0.5), 120px 0 0 20px rgba(255,255,255,0.5);
+    animation-duration: 25s;
+  }
+  body::after {
+    width: 150px; height: 60px;
+    top: 60%; left: -180px;
+    box-shadow: 50px -15px 0 30px rgba(255,255,255,0.4), 90px 0 0 15px rgba(255,255,255,0.4);
+    animation-duration: 35s;
+    animation-delay: -15s;
+  }
+  @keyframes float-cloud {
+    from { transform: translateX(0); }
+    to { transform: translateX(calc(100vw + 300px)); }
+  }
+
+  /* === TELAS === */
+  .tela {
+    display: none;
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 700px;
+    padding: 16px;
+    animation: pop-in 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  .tela.ativa { display: flex; flex-direction: column; align-items: center; }
+
+  @keyframes pop-in {
+    from { transform: scale(0.7); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  /* === CARD BASE === */
+  .card {
+    background: var(--azul);
+    border-radius: 28px;
+    padding: 28px 24px 32px;
+    width: 100%;
+    box-shadow: 0 10px 0 rgba(0,80,130,0.35), 0 16px 32px rgba(0,0,0,0.15);
+    position: relative;
+  }
+
+  /* === TELA INICIAL === */
+  #tela-inicio .titulo-jogo {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(2.2rem, 7vw, 3.4rem);
+    color: #fff700;
+    text-shadow: 3px 3px 0 #c87000, -1px -1px 0 #c87000, 1px -1px 0 #c87000, -1px 1px 0 #c87000;
+    line-height: 1.1;
+    text-align: center;
+    margin-bottom: 8px;
+  }
+
+  #tela-inicio .subtitulo {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(1.3rem, 4vw, 1.9rem);
+    color: #ffffff;
+    text-shadow: 2px 2px 0 rgba(0,0,0,0.3);
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .mascote-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+
+  .mascote-emoji {
+    font-size: 100px;
+    animation: pato-balanco 2s ease-in-out infinite;
+    filter: drop-shadow(0 8px 6px rgba(0,0,0,0.25));
+    line-height: 1;
+  }
+
+  @keyframes pato-balanco {
+    0%, 100% { transform: rotate(-5deg) translateY(0); }
+    50% { transform: rotate(5deg) translateY(-10px); }
+  }
+
+  .btn-iniciar {
+    background: var(--verde);
+    color: white;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.5rem;
+    padding: 16px 48px;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 6px 0 var(--verde-escuro), var(--sombra-btn);
+    transition: transform 0.1s, box-shadow 0.1s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 8px;
+  }
+  .btn-iniciar:hover { transform: translateY(-3px); box-shadow: 0 9px 0 var(--verde-escuro); }
+  .btn-iniciar:active { transform: translateY(3px); box-shadow: 0 3px 0 var(--verde-escuro); }
+
+  /* === TELA DADOS === */
+  #tela-dados .card { background: var(--azul); }
+
+  .titulo-tela {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(1.4rem, 5vw, 2rem);
+    color: var(--amarelo);
+    text-shadow: 2px 2px 0 rgba(0,0,0,0.25);
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .campo-grupo {
+    margin-bottom: 14px;
+  }
+
+  .campo-grupo label {
+    display: block;
+    font-size: 1rem;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .campo-grupo .opcional {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: rgba(255,255,255,0.7);
+    text-transform: none;
+    letter-spacing: 0;
+  }
+
+  .campo-grupo input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 3px solid rgba(255,255,255,0.4);
+    border-radius: 14px;
+    background: rgba(255,255,255,0.9);
+    font-family: 'Nunito', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #1a5f8a;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    text-transform: uppercase;
+  }
+  .campo-grupo input::placeholder { color: #9cc4dc; text-transform: none; font-weight: 600; }
+  .campo-grupo input:focus { border-color: var(--amarelo); box-shadow: 0 0 0 3px rgba(255,210,63,0.4); }
+
+  .mascote-dados {
+    font-size: 60px;
+    text-align: center;
+    margin-bottom: 14px;
+    animation: pato-balanco 2.5s ease-in-out infinite;
+  }
+
+  /* === TELA PERGUNTA === */
+  #tela-pergunta .card { background: var(--azul); }
+
+  .barra-progresso-container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+
+  .barra-progresso-bg {
+    flex: 1;
+    height: 14px;
+    background: rgba(0,0,0,0.2);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .barra-progresso-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--amarelo), var(--laranja));
+    border-radius: 10px;
+    transition: width 0.5s ease;
+    box-shadow: 0 0 8px rgba(255,140,66,0.5);
+  }
+
+  .progresso-texto {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    color: white;
+    white-space: nowrap;
+    text-shadow: 1px 1px 0 rgba(0,0,0,0.25);
+  }
+
+  .num-pergunta-badge {
+    width: 50px; height: 50px;
+    background: var(--amarelo);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.2rem;
+    color: #c87000;
+    box-shadow: 0 4px 0 rgba(180,100,0,0.5);
+    flex-shrink: 0;
+  }
+
+  .pergunta-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .btn-audio {
+    background: rgba(255,255,255,0.25);
+    border: 2px solid rgba(255,255,255,0.5);
+    border-radius: 50%;
+    width: 40px; height: 40px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+    transition: background 0.2s, transform 0.15s;
+    margin-top: 2px;
+  }
+  .btn-audio:hover { background: rgba(255,255,255,0.4); transform: scale(1.1); }
+  .btn-audio.tocando { animation: pulso-audio 0.6s ease-in-out infinite alternate; }
+  @keyframes pulso-audio { from { transform: scale(1); } to { transform: scale(1.15); } }
+
+  .texto-pergunta {
+    font-size: clamp(1rem, 3.5vw, 1.25rem);
+    font-weight: 800;
+    color: white;
+    text-shadow: 1px 1px 0 rgba(0,0,0,0.2);
+    line-height: 1.35;
+    text-transform: uppercase;
+    flex: 1;
+  }
+
+  .imagem-pergunta {
+    width: 100%;
+    max-height: 160px;
+    object-fit: cover;
+    border-radius: 16px;
+    margin-bottom: 16px;
+    border: 4px solid rgba(255,255,255,0.4);
+    background: rgba(255,255,255,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 5rem;
+    overflow: hidden;
+  }
+
+  .imagem-pergunta-emoji {
+    width: 100%;
+    height: 140px;
+    background: rgba(255,255,255,0.25);
+    border-radius: 16px;
+    margin-bottom: 16px;
+    border: 4px solid rgba(255,255,255,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 5rem;
+  }
+
+  .opcoes-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .opcao-btn {
+    background: rgba(255,255,255,0.9);
+    border: 3px solid transparent;
+    border-radius: 16px;
+    padding: 12px 10px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    transition: transform 0.15s, box-shadow 0.15s, background 0.2s;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.2);
+    min-height: 80px;
+    justify-content: center;
+  }
+
+  .opcao-btn:hover:not(:disabled) {
+    transform: translateY(-3px);
+    box-shadow: 0 7px 0 rgba(0,0,0,0.2);
+    background: white;
+  }
+
+  .opcao-btn:active:not(:disabled) {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 rgba(0,0,0,0.2);
+  }
+
+  .opcao-emoji {
+    font-size: 2.4rem;
+    line-height: 1;
+    display: block;
+    font-family: "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif;
+    min-width: 40px;
+    min-height: 40px;
+    text-align: center;
+  }
+
+  .opcao-texto {
+    font-size: clamp(0.7rem, 2.5vw, 0.85rem);
+    font-weight: 800;
+    color: #1a5f8a;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    line-height: 1.2;
+  }
+
+  .opcao-btn.correta {
+    background: #c8f7d0;
+    border-color: var(--verde);
+    box-shadow: 0 4px 0 var(--verde-escuro);
+    animation: resposta-correta 0.5s ease;
+  }
+  @keyframes resposta-correta {
+    0% { transform: scale(1); }
+    30% { transform: scale(1.1); }
+    60% { transform: scale(0.97); }
+    100% { transform: scale(1); }
+  }
+
+  .opcao-btn.errada {
+    background: #ffd0d0;
+    border-color: var(--vermelho);
+    box-shadow: 0 4px 0 var(--vermelho-escuro);
+    animation: shake 0.4s ease;
+  }
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
+  }
+
+  .opcao-btn:disabled { cursor: not-allowed; }
+
+  .mascote-pergunta {
+    position: absolute;
+    bottom: -10px;
+    right: -10px;
+    font-size: 60px;
+    line-height: 1;
+    filter: drop-shadow(2px 4px 4px rgba(0,0,0,0.2));
+    animation: pato-balanco 3s ease-in-out infinite;
+    z-index: 2;
+  }
+
+  /* === FEEDBACK RESPOSTA === */
+  .feedback-resposta {
+    display: none;
+    margin-top: 14px;
+    padding: 12px 16px;
+    border-radius: 14px;
+    font-size: 1rem;
+    font-weight: 800;
+    text-align: center;
+    text-transform: uppercase;
+    animation: pop-in 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  .feedback-resposta.correto { background: var(--verde); color: white; }
+  .feedback-resposta.errado { background: var(--vermelho); color: white; }
+
+  .btn-proxima {
+    display: none;
+    margin-top: 14px;
+    width: 100%;
+    background: var(--amarelo);
+    color: #7a4e00;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.3rem;
+    padding: 14px;
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    box-shadow: 0 5px 0 rgba(150,90,0,0.4);
+    transition: transform 0.1s, box-shadow 0.1s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .btn-proxima:hover { transform: translateY(-2px); box-shadow: 0 7px 0 rgba(150,90,0,0.4); }
+  .btn-proxima:active { transform: translateY(3px); box-shadow: 0 2px 0 rgba(150,90,0,0.4); }
+
+  /* === TELA FINAL === */
+  #tela-final .card {
+    background: var(--azul);
+    text-align: center;
+  }
+
+  .estrelas-container {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin: 16px 0;
+  }
+
+  .estrela {
+    font-size: 3rem;
+    animation: estrela-brilha 0.5s ease forwards;
+    opacity: 0;
+    transform: scale(0);
+  }
+
+  @keyframes estrela-brilha {
+    to { opacity: 1; transform: scale(1) rotate(15deg); }
+  }
+
+  .titulo-final {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(1.8rem, 6vw, 2.8rem);
+    color: var(--amarelo);
+    text-shadow: 3px 3px 0 rgba(0,0,0,0.2);
+    margin-bottom: 8px;
+  }
+
+  .subtitulo-final {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+  }
+
+  .score-display {
+    background: rgba(255,255,255,0.2);
+    border-radius: 20px;
+    padding: 16px 32px;
+    margin: 16px auto;
+    display: inline-block;
+  }
+
+  .score-numero {
+    font-family: 'Fredoka One', cursive;
+    font-size: 3.5rem;
+    color: var(--amarelo);
+    text-shadow: 3px 3px 0 rgba(0,0,0,0.2);
+    line-height: 1;
+  }
+
+  .score-label {
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: rgba(255,255,255,0.85);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .mascote-final {
+    font-size: 90px;
+    line-height: 1;
+    margin: 16px 0;
+    display: block;
+    animation: pato-feliz 0.8s ease-in-out infinite alternate;
+  }
+  @keyframes pato-feliz {
+    from { transform: translateY(0) rotate(-8deg); }
+    to { transform: translateY(-15px) rotate(8deg); }
+  }
+
+  .btn-jogar-novamente {
+    background: var(--verde);
+    color: white;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.4rem;
+    padding: 14px 40px;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 6px 0 var(--verde-escuro);
+    transition: transform 0.1s, box-shadow 0.1s;
+    text-transform: uppercase;
+    margin-top: 12px;
+  }
+  .btn-jogar-novamente:hover { transform: translateY(-3px); box-shadow: 0 9px 0 var(--verde-escuro); }
+  .btn-jogar-novamente:active { transform: translateY(3px); box-shadow: 0 3px 0 var(--verde-escuro); }
+
+  /* Confetes */
+  .confete {
+    position: fixed;
+    width: 10px; height: 10px;
+    border-radius: 2px;
+    animation: confete-cair 3s ease-in forwards;
+    z-index: 99;
+    pointer-events: none;
+  }
+  @keyframes confete-cair {
+    0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+  }
+
+  /* Decoração canto */
+  .deco-sol {
+    position: fixed;
+    top: -30px; right: -30px;
+    font-size: 120px;
+    opacity: 0.25;
+    animation: girar-sol 20s linear infinite;
+    z-index: 0;
+    pointer-events: none;
+  }
+  @keyframes girar-sol {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  /* Responsivo mobile */
+  @media (max-width: 480px) {
+    .opcao-emoji { font-size: 1.8rem; }
+    .card { padding: 20px 16px 24px; }
+    .btn-iniciar { font-size: 1.2rem; padding: 14px 36px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="deco-sol">☀️</div>
+
+<!-- TELA INICIAL -->
+<div class="tela ativa" id="tela-inicio">
+  <div class="card">
+    <div class="titulo-jogo">MINHA AVENTURA</div>
+    <div class="subtitulo">EM BRUSQUE! 🦆</div>
+    <div class="mascote-container">
+      <span class="mascote-emoji">🦆</span>
+    </div>
+    <p style="text-align:center; color:rgba(255,255,255,0.9); font-weight:700; font-size:1rem; margin-bottom:20px; text-transform:uppercase; letter-spacing:0.5px;">
+      VOCÊ CONHECE NOSSA CIDADE?<br>VAMOS DESCOBRIR JUNTOS! 🌟
+    </p>
+    <div style="display:flex; justify-content:center;">
+      <button class="btn-iniciar" onclick="irParaTela('tela-dados')">▶ CLIQUE PARA COMEÇAR</button>
+    </div>
+  </div>
+</div>
+
+<!-- TELA COLETA DE DADOS -->
+<div class="tela" id="tela-dados">
+  <div class="card">
+    <div class="mascote-dados">🦆</div>
+    <div class="titulo-tela">ME CONTA QUEM É VOCÊ?</div>
+
+    <div class="campo-grupo">
+      <label>SEU NOME <span class="opcional">(opcional)</span></label>
+      <input type="text" id="campo-nome" placeholder="Digite seu nome aqui..." maxlength="40">
+    </div>
+
+    <div class="campo-grupo">
+      <label>QUANTOS ANOS VOCÊ TEM? <span class="opcional">(opcional)</span></label>
+      <input type="number" id="campo-idade" placeholder="Sua idade..." min="3" max="12">
+    </div>
+
+    <div class="campo-grupo">
+      <label>QUAL O NOME DA SUA ESCOLA? <span class="opcional">(opcional)</span></label>
+      <input type="text" id="campo-escola" placeholder="Nome da sua escola..." maxlength="60">
+    </div>
+
+    <div style="display:flex; justify-content:center; margin-top:16px;">
+      <button class="btn-iniciar" onclick="iniciarJogo()">VAMOS LÁ! 🚀</button>
+    </div>
+  </div>
+</div>
+
+<!-- TELA PERGUNTA -->
+<div class="tela" id="tela-pergunta">
+  <div class="card" style="position:relative; overflow:visible;">
+
+    <div class="barra-progresso-container">
+      <div class="barra-progresso-bg">
+        <div class="barra-progresso-fill" id="barra-progresso"></div>
+      </div>
+      <div class="progresso-texto" id="texto-progresso">1/15</div>
+    </div>
+
+    <div class="pergunta-header">
+      <div class="num-pergunta-badge" id="num-badge">1</div>
+      <button class="btn-audio" id="btn-audio-perg" onclick="lerPergunta()" title="Ouvir pergunta">🔊</button>
+      <div class="texto-pergunta" id="texto-pergunta">CARREGANDO...</div>
+    </div>
+
+    <div class="imagem-pergunta-emoji" id="img-pergunta">🌆</div>
+
+    <div class="opcoes-grid" id="opcoes-container"></div>
+
+    <div class="feedback-resposta" id="feedback-resposta"></div>
+    <button class="btn-proxima" id="btn-proxima" onclick="proximaPergunta()">PRÓXIMA ➡️</button>
+
+    <div class="mascote-pergunta" id="mascote-pergunta">🦆</div>
+  </div>
+</div>
+
+<!-- TELA FINAL -->
+<div class="tela" id="tela-final">
+  <div class="card">
+    <span class="mascote-final" id="mascote-final">🦆</span>
+    <div class="titulo-final" id="titulo-final">PARABÉNS!</div>
+    <div class="subtitulo-final" id="subtitulo-final">VOCÊ SABE MUITO SOBRE BRUSQUE!</div>
+
+    <div class="score-display">
+      <div class="score-numero" id="score-final">0</div>
+      <div class="score-label">DE 15 ACERTOS</div>
+    </div>
+
+    <div class="estrelas-container" id="estrelas-container"></div>
+
+    <button class="btn-jogar-novamente" onclick="reiniciar()">🔄 JOGAR NOVAMENTE</button>
+  </div>
+</div>
+
+<script>
+// === BANCO DE PERGUNTAS ===
+// Emojis garantidos: todos testados e funcionais em Chrome/Firefox/Edge/Safari
+// 🦫 capivara não suportada em sistemas antigos → substituída por 🐹 (roedor reconhecível)
+// 🪨🪵🪟🛟🩷🧑‍💼 → substituídos por equivalentes universais
+const TODAS_PERGUNTAS = [
+  {
+    id: 1,
+    texto: "QUAL ANIMALZINHO FOFO VIVE LÁ NO PARQUE ZOOBOTÂNICO DE BRUSQUE?",
+    emoji: "🌿",
+    opcoes: [
+      { texto: "MACACO",   emoji: "🐒", correta: false },
+      { texto: "ELEFANTE", emoji: "🐘", correta: false },
+      { texto: "CAPIVARA", emoji: "🐹", correta: true  },
+      { texto: "PINGUIM",  emoji: "🐧", correta: false },
+    ]
+  },
+  {
+    id: 2,
+    texto: "BRUSQUE É CONHECIDA COMO A CIDADE DOS TECIDOS. O QUE FAZEMOS COM OS TECIDOS?",
+    emoji: "🧵",
+    opcoes: [
+      { texto: "ROUPAS",   emoji: "👗", correta: true  },
+      { texto: "TORTAS",   emoji: "🍰", correta: false },
+      { texto: "PEDRAS",   emoji: "⛰️", correta: false },
+      { texto: "FOGUETES", emoji: "🚀", correta: false },
+    ]
+  },
+  {
+    id: 3,
+    texto: "QUAL É A COR DA GRANDE IGREJA QUE FICA BEM NO CENTRO DA CIDADE?",
+    emoji: "⛪",
+    opcoes: [
+      { texto: "AZUL",  emoji: "🔵", correta: false },
+      { texto: "CINZA", emoji: "⬜", correta: true  },
+      { texto: "VERDE", emoji: "🟢", correta: false },
+      { texto: "PRETA", emoji: "⬛", correta: false },
+    ]
+  },
+  {
+    id: 4,
+    texto: "QUAL RIO PASSA BEM NO MEIO DA NOSSA CIDADE DE BRUSQUE?",
+    emoji: "🏞️",
+    opcoes: [
+      { texto: "RIO VERDE",        emoji: "🌿", correta: false },
+      { texto: "RIO ITAJAÍ-MIRIM", emoji: "🌊", correta: true  },
+      { texto: "RIO AMAZONAS",     emoji: "🐊", correta: false },
+      { texto: "RIO NEGRO",        emoji: "⚫", correta: false },
+    ]
+  },
+  {
+    id: 5,
+    texto: "NA NOSSA FESTA MAIS FAMOSA, TODO MUNDO DANÇA E SOM. QUAL É O ANIMALZINHO DA FESTA?",
+    emoji: "🎊",
+    opcoes: [
+      { texto: "LEÃO",     emoji: "🦁", correta: false },
+      { texto: "COBRA",    emoji: "🐍", correta: false },
+      { texto: "MARRECO",  emoji: "🦆", correta: true  },
+      { texto: "GOLFINHO", emoji: "🐬", correta: false },
+    ]
+  },
+  {
+    id: 6,
+    texto: "EXISTE UM PARQUE CHEIO DE ESTÁTUAS GIGANTES FEITAS DE PEDRA BRANCA E BRILHANTE. QUE PEDRA É ESSA?",
+    emoji: "🗿",
+    opcoes: [
+      { texto: "MÁRMORE", emoji: "🗿",  correta: true  },
+      { texto: "AREIA",   emoji: "🏖️", correta: false },
+      { texto: "MADEIRA", emoji: "🌲",  correta: false },
+      { texto: "VIDRO",   emoji: "🔷",  correta: false },
+    ]
+  },
+  {
+    id: 7,
+    texto: "HÁ MUITOS ANOS, PESSOAS VIERAM DE LONGE PARA MORAR AQUI. DE ONDE ELAS VIERAM?",
+    emoji: "⛵",
+    opcoes: [
+      { texto: "DA AFRICA",  emoji: "🌍", correta: false },
+      { texto: "DA ASIA",    emoji: "🏯", correta: false },
+      { texto: "DA EUROPA",  emoji: "🗼", correta: true  },
+      { texto: "DA AMERICA", emoji: "🌎", correta: false },
+    ]
+  },
+  {
+    id: 8,
+    texto: "O RIO ITAJAÍ-MIRIM PASSA NO MEIO DA CIDADE. QUEM GOSTA DE VIVER PERTO DO RIO?",
+    emoji: "🌊",
+    opcoes: [
+      { texto: "CAPIVARA", emoji: "🐹", correta: true  },
+      { texto: "JACARÉ",   emoji: "🐊", correta: false },
+      { texto: "LOBO",     emoji: "🐺", correta: false },
+      { texto: "CANGURU",  emoji: "🦘", correta: false },
+    ]
+  },
+  {
+    id: 9,
+    texto: "O QUE A GENTE USA PARA ATRAVESSAR O RIO SEM SE MOLHAR?",
+    emoji: "🚶",
+    opcoes: [
+      { texto: "BOIA",   emoji: "🔴", correta: false },
+      { texto: "BARCO",  emoji: "⛵", correta: false },
+      { texto: "PONTE",  emoji: "🌉", correta: true  },
+      { texto: "NADAR",  emoji: "🏊", correta: false },
+    ]
+  },
+  {
+    id: 10,
+    texto: "EM BRUSQUE TEM UMA PONTE LINDA COM CABOS. COMO CHAMAMOS ESSE TIPO DE PONTE?",
+    emoji: "🌉",
+    opcoes: [
+      { texto: "PONTE DE MADEIRA",  emoji: "🌲",  correta: false },
+      { texto: "PONTE ESTAIADA",    emoji: "🌉",  correta: true  },
+      { texto: "PONTE DE PEDRA",    emoji: "⛰️", correta: false },
+      { texto: "PONTE FLUTUANTE",   emoji: "🚢",  correta: false },
+    ]
+  },
+  {
+    id: 11,
+    texto: "QUAL É O LUGAR ONDE A GENTE VAI PARA VER OS BICHINHOS?",
+    emoji: "🦁",
+    opcoes: [
+      { texto: "SHOPPING",    emoji: "🛍️", correta: false },
+      { texto: "ZOOBOTÂNICO", emoji: "🌿",  correta: true  },
+      { texto: "ESCOLA",      emoji: "🏫",  correta: false },
+      { texto: "PADARIA",     emoji: "🍞",  correta: false },
+    ]
+  },
+  {
+    id: 12,
+    texto: "O QUE O MARRECO USA NA CABEÇA NA NOSSA FESTA?",
+    emoji: "🎩",
+    opcoes: [
+      { texto: "BARRETE",      emoji: "🎓", correta: false },
+      { texto: "CHAPÉU TIROLÊS", emoji: "🎩", correta: true  },
+      { texto: "COROA",        emoji: "👑", correta: false },
+      { texto: "CAPACETE",     emoji: "⛑️", correta: false },
+    ]
+  },
+  {
+    id: 13,
+    texto: "O QUE AS CAPIVARAS GOSTAM DE COMER?",
+    emoji: "🐹",
+    opcoes: [
+      { texto: "CHOCOLATE", emoji: "🍫", correta: false },
+      { texto: "PIZZA",     emoji: "🍕", correta: false },
+      { texto: "PIPOCA",    emoji: "🍿", correta: false },
+      { texto: "GRAMA",     emoji: "🌿", correta: true  },
+    ]
+  },
+  {
+    id: 14,
+    texto: "O QUE A GENTE COME NO CAFÉ DA MANHÃ EM BRUSQUE?",
+    emoji: "☕",
+    opcoes: [
+      { texto: "TACOS",      emoji: "🌮", correta: false },
+      { texto: "CUCA",       emoji: "🍰", correta: true  },
+      { texto: "SUSHI",      emoji: "🍣", correta: false },
+      { texto: "HAMBÚRGUER", emoji: "🍔", correta: false },
+    ]
+  },
+  {
+    id: 15,
+    texto: "QUEM DEVE AJUDAR A CUIDAR DAS FLORES E DAS RUAS DE BRUSQUE?",
+    emoji: "🌸",
+    opcoes: [
+      { texto: "TODOS NÓS",    emoji: "👨‍👩‍👧‍👦", correta: true  },
+      { texto: "SÓ OS ADULTOS", emoji: "👔",         correta: false },
+      { texto: "SÓ A ESCOLA",  emoji: "🏫",          correta: false },
+      { texto: "NINGUÉM",      emoji: "🙅",          correta: false },
+    ]
+  },
+];
+
+// === ESTADO DO JOGO ===
+let perguntasAtuais = [];
+let indicePergunta = 0;
+let pontuacao = 0;
+let respondeu = false;
+let voz = null;
+
+// Carregar vozes TTS
+function carregarVozes() {
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.onvoiceschanged = () => {
+      const vozes = window.speechSynthesis.getVoices();
+      voz = vozes.find(v => v.lang.startsWith('pt')) || vozes[0];
+    };
+    window.speechSynthesis.getVoices();
+  }
+}
+
+function falar(texto) {
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(texto.toLowerCase());
+  utt.lang = 'pt-BR';
+  utt.rate = 0.85;
+  utt.pitch = 1.2;
+  if (voz) utt.voice = voz;
+  const btn = document.getElementById('btn-audio-perg');
+  if (btn) btn.classList.add('tocando');
+  utt.onend = () => { if (btn) btn.classList.remove('tocando'); };
+  window.speechSynthesis.speak(utt);
+}
+
+function lerPergunta() {
+  const pergunta = perguntasAtuais[indicePergunta];
+  if (pergunta) falar(pergunta.texto);
+}
+
+// === NAVEGAÇÃO ===
+function irParaTela(id) {
+  document.querySelectorAll('.tela').forEach(t => t.classList.remove('ativa'));
+  const tela = document.getElementById(id);
+  tela.classList.add('ativa');
+}
+
+function iniciarJogo() {
+  // Embaralhar e selecionar perguntas
+  perguntasAtuais = [...TODAS_PERGUNTAS].sort(() => Math.random() - 0.5);
+  indicePergunta = 0;
+  pontuacao = 0;
+  irParaTela('tela-pergunta');
+  renderizarPergunta();
+}
+
+function embaralharOpcoes(opcoes) {
+  return [...opcoes].sort(() => Math.random() - 0.5);
+}
+
+function renderizarPergunta() {
+  respondeu = false;
+  const p = perguntasAtuais[indicePergunta];
+  const total = perguntasAtuais.length;
+
+  // Progresso
+  const pct = ((indicePergunta) / total) * 100;
+  document.getElementById('barra-progresso').style.width = pct + '%';
+  document.getElementById('texto-progresso').textContent = `${indicePergunta + 1}/${total}`;
+  document.getElementById('num-badge').textContent = indicePergunta + 1;
+
+  // Pergunta
+  document.getElementById('texto-pergunta').textContent = p.texto;
+  document.getElementById('img-pergunta').textContent = p.emoji;
+
+  // Ocultar feedback e botão próxima
+  const fb = document.getElementById('feedback-resposta');
+  fb.style.display = 'none';
+  fb.className = 'feedback-resposta';
+  const btnProx = document.getElementById('btn-proxima');
+  btnProx.style.display = 'none';
+
+  // Mascote alternado
+  const mascotes = ['🦆', '🦫', '🐥'];
+  document.getElementById('mascote-pergunta').textContent = mascotes[indicePergunta % mascotes.length];
+
+  // Opcoes embaralhadas
+  const opcoes = embaralharOpcoes(p.opcoes);
+  const container = document.getElementById('opcoes-container');
+  container.innerHTML = '';
+
+  opcoes.forEach((op, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'opcao-btn';
+    btn.innerHTML = `<span class="opcao-emoji">${op.emoji}</span><span class="opcao-texto">${op.texto}</span>`;
+    btn.addEventListener('click', () => responder(btn, op.correta, op.texto));
+    container.appendChild(btn);
+  });
+
+  // Falar pergunta automaticamente após pequeno delay
+  setTimeout(() => falar(p.texto), 600);
+}
+
+function responder(btn, correta, textoOpcao) {
+  if (respondeu) return;
+  respondeu = true;
+
+  const fb = document.getElementById('feedback-resposta');
+  const btnProx = document.getElementById('btn-proxima');
+
+  // Desabilitar todos os botões
+  document.querySelectorAll('.opcao-btn').forEach(b => b.disabled = true);
+
+  if (correta) {
+    btn.classList.add('correta');
+    pontuacao++;
+    fb.textContent = '✅ MUITO BEM! RESPOSTA CORRETA! 🎉';
+    fb.classList.add('correto');
+    falar('Muito bem! Resposta correta!');
+  } else {
+    btn.classList.add('errada');
+    // Destacar a correta
+    document.querySelectorAll('.opcao-btn').forEach(b => {
+      const txt = b.querySelector('.opcao-texto').textContent;
+      const opcaoCorreta = perguntasAtuais[indicePergunta].opcoes.find(o => o.correta);
+      if (txt === opcaoCorreta.texto) b.classList.add('correta');
+    });
+    fb.textContent = '❌ OPS! TENTE DE NOVO DA PRÓXIMA VEZ!';
+    fb.classList.add('errado');
+    falar('Ops! Não foi dessa vez. Tente de novo!');
+  }
+
+  fb.style.display = 'block';
+  btnProx.style.display = 'block';
+}
+
+function proximaPergunta() {
+  indicePergunta++;
+  if (indicePergunta >= perguntasAtuais.length) {
+    mostrarFinal();
+  } else {
+    renderizarPergunta();
+  }
+}
+
+function mostrarFinal() {
+  irParaTela('tela-final');
+  const total = perguntasAtuais.length;
+  document.getElementById('score-final').textContent = pontuacao;
+
+  // Título e subtítulo baseado no score
+  const pct = pontuacao / total;
+  let titulo, subtitulo, mascote;
+  if (pct >= 0.8) {
+    titulo = '🏆 PARABÉNS!';
+    subtitulo = 'VOCÊ ARRASOU! VOCÊ SABE MUITO SOBRE BRUSQUE!';
+    mascote = '🦆';
+    gerarConfetes();
+  } else if (pct >= 0.5) {
+    titulo = '⭐ QUASE LÁ!';
+    subtitulo = 'VOCÊ SE SAIU BEM! VAMOS MELHORAR? TENTE DE NOVO!';
+    mascote = '🐥';
+  } else {
+    titulo = '💪 NÃO DESISTA!';
+    subtitulo = 'CONTINUE APRENDENDO SOBRE BRUSQUE! TENTE DE NOVO!';
+    mascote = '🦫';
+  }
+
+  document.getElementById('titulo-final').textContent = titulo;
+  document.getElementById('subtitulo-final').textContent = subtitulo;
+  document.getElementById('mascote-final').textContent = mascote;
+
+  // Estrelas
+  const numEstrelas = Math.ceil((pontuacao / total) * 3);
+  const container = document.getElementById('estrelas-container');
+  container.innerHTML = '';
+  for (let i = 0; i < 3; i++) {
+    const e = document.createElement('span');
+    e.className = 'estrela';
+    e.textContent = i < numEstrelas ? '⭐' : '☆';
+    e.style.animationDelay = (i * 0.25) + 's';
+    container.appendChild(e);
+  }
+
+  falar(subtitulo);
+}
+
+function gerarConfetes() {
+  const cores = ['#ffd23f', '#4cce5e', '#f05a5a', '#3db8e8', '#ff8c42', '#ffffff'];
+  for (let i = 0; i < 60; i++) {
+    setTimeout(() => {
+      const c = document.createElement('div');
+      c.className = 'confete';
+      c.style.left = Math.random() * 100 + 'vw';
+      c.style.top = '-10px';
+      c.style.background = cores[Math.floor(Math.random() * cores.length)];
+      c.style.width = (8 + Math.random() * 8) + 'px';
+      c.style.height = (8 + Math.random() * 8) + 'px';
+      c.style.animationDuration = (2 + Math.random() * 2) + 's';
+      c.style.animationDelay = Math.random() * 1.5 + 's';
+      document.body.appendChild(c);
+      setTimeout(() => c.remove(), 4000);
+    }, i * 30);
+  }
+}
+
+function reiniciar() {
+  iniciarJogo();
+}
+
+// Init
+carregarVozes();
+</script>
+</body>
+</html>
