@@ -49,5 +49,7 @@ Cada pergunta tem o formato:
 
 ## 👥 Projeto
 Alunos: Carlos Eduardo Muniz Manes, Daniel Wiederkehr de Souza , Igor Manuel Hames , Luiz Eduardo Nicolodi e Matheus Hoffmann Forster
+
+
 Parceria UNIFEBE × Prefeitura Municipal de Brusque
 Curricularização 2026 — Curso de Sistemas de Informação
